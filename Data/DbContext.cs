@@ -21,10 +21,10 @@ namespace JobTracker.Data
           .IsUnique();
 
         entity.Property(e => e.CreatedAt)
-          .HasDefaultValueSql("GETUTCDATE()");
+          .HasDefaultValueSql("timezone('utc', now())");
           
         entity.Property(e => e.UpdatedAt)
-          .HasDefaultValueSql("GETUTCDATE()"); 
+          .HasDefaultValueSql("timezone('utc', now())"); 
       });
     }
   }
