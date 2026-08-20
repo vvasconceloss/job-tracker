@@ -2,12 +2,21 @@ using JobTracker.Data;
 using JobTracker.Models;
 using JobTracker.Interfaces;
 using JobTracker.DTOs.Company;
+using Microsoft.EntityFrameworkCore;
 
 namespace JobTracker.Services
 {
   public class CompanyService(ApplicationDbContext context) : ICompanyService
   {
     private readonly ApplicationDbContext _context = context;
+    
+    public async Task<IEnumerable<CompanyResponseDto>> GetAllAsync()
+    {
+      return await _context.Companies
+        .AsNoTracking()
+        .Select(c => new CompanyResponseDto(c.Id, c.Name, c.Website))
+        .ToListAsync();
+    }
 
     public async Task<CompanyResponseDto> CreateAsync(CreateCompanyDto dto)
     {
