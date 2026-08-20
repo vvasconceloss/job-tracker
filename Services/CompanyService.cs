@@ -1,6 +1,7 @@
 using JobTracker.Data;
-using JobTracker.DTOs.Company;
+using JobTracker.Models;
 using JobTracker.Interfaces;
+using JobTracker.DTOs.Company;
 
 namespace JobTracker.Services
 {
@@ -8,9 +9,18 @@ namespace JobTracker.Services
   {
     private readonly ApplicationDbContext _context = context;
 
-    public Task<CompanyResponseDto> CreateAsync(CreateCompanyDto dto)
+    public async Task<CompanyResponseDto> CreateAsync(CreateCompanyDto dto)
     {
-      throw new NotImplementedException();
+      var newCompany = new Company
+      {
+        Name = dto.Name,
+        Website = dto.Website
+      };
+
+      _context.Companies.Add(newCompany);
+      await _context.SaveChangesAsync();
+
+      return new CompanyResponseDto(newCompany.Id, newCompany.Name, newCompany.Website);
     }
 
     public Task<CompanyResponseDto> GetByIdAsync(int id)
