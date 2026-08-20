@@ -25,7 +25,7 @@ which companies I've applied to, which position, at what stage, and what the num
 overall. It replaces the usual mess of spreadsheets, bookmarks and browser tabs during a job search
 with a single source of truth, queryable through a dashboard endpoint.
 
-It's built as a learning-first portfolio piece, backend-only (Swagger as the interface, no
+It's built as a learning-first portfolio piece, backend-only (Scalar as the interface, no
 frontend): ASP.NET Core Web API, Entity Framework Core against PostgreSQL, a Controller → Service →
 DbContext layered architecture, DTOs, validation, centralized exception handling, and unit tests on
 the layer that actually contains business logic.
@@ -35,7 +35,7 @@ the layer that actually contains business logic.
 ## Project Status
 
 🚧 In development. No live deployment: this project is intentionally
-backend-only with Swagger as the interface, and hosting is out of scope for now.
+backend-only with Scalar as the interface, and hosting is out of scope for now.
 
 ---
 
@@ -159,7 +159,7 @@ Run the app:
 dotnet run --project src/JobTracker
 ```
 
-The API will be available at `http://localhost:5183`, with Swagger UI at `/swagger` in development.
+The API will be available at `http://localhost:5099`, with Scalar UI at `/scalar/v1` in development.
 
 ---
 
