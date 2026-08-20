@@ -23,9 +23,12 @@ namespace JobTracker.Services
       return new CompanyResponseDto(newCompany.Id, newCompany.Name, newCompany.Website);
     }
 
-    public Task<CompanyResponseDto> GetByIdAsync(int id)
+    public async Task<CompanyResponseDto?> GetByIdAsync(int id)
     {
-      throw new NotImplementedException();
+      var company = await _context.Companies.FindAsync(id);
+      if (company == null) return null;
+
+      return new CompanyResponseDto(company.Id, company.Name, company.Website);
     }
   }
 }
