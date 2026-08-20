@@ -6,7 +6,7 @@ namespace JobTracker.Controllers
 {
   [ApiController]
   [Route("api/[controller]")]
-  public class CompanyController(ICompanyService companyService) : ControllerBase
+  public class CompanyController(ICompanyService companyService) : BaseController
   {
     private readonly ICompanyService _companyService = companyService;
 
@@ -20,19 +20,17 @@ namespace JobTracker.Controllers
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-      var company = await _companyService.GetByIdAsync(id);
-      if (company == null)return NotFound(new { message = $"Company with ID {id} not found." });
-
-      return Ok(company);
+      var result = await _companyService.GetByIdAsync(id);
+      return HandleResult(result);
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateCompanyDto dto)
     {
-      if (!ModelState.IsValid) return BadRequest(ModelState);
-      var createdTask = await _companyService.CreateAsync(dto);
+      var result = await _companyService.CreateAsync(dto);
+      if (!result.IsSuccess) return HandleResult(result);
 
-      return CreatedAtAction(nameof(GetById), createdTask);
+      return CreatedAtAction(nameof(GetById), new { id = result.Value!.Id }, result.Value);
     }
   }
 }
