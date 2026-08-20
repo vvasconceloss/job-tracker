@@ -6,7 +6,7 @@ namespace JobTracker.Controllers
 {
   [ApiController]
   [Route("api/[controller]")]
-  public class CompanyController(ICompanyService companyService) : BaseController
+  public class CompaniesController(ICompanyService companyService) : BaseController
   {
     private readonly ICompanyService _companyService = companyService;
 
