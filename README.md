@@ -77,7 +77,7 @@ PostgreSQL
 JobTracker/
 │
 ├── Controllers/          # CompaniesController, JobApplicationsController
-├── Data/                 # ApplicationDbContext, migrations, Configurations
+├── Data/                 # ApplicationDbContext, Configurations
 ├── Models/               # Company, JobApplication
 ├── DTOs/                 # Companies/, JobApplications/
 ├── Enums/                # ApplicationStatus
