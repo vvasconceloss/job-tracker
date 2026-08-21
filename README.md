@@ -79,7 +79,7 @@ JobTracker/
 ├── Controllers/          # CompaniesController, JobApplicationsController
 ├── Data/                 # ApplicationDbContext, Configurations
 ├── Models/               # Company, JobApplication
-├── DTOs/                 # Companies/, JobApplications/
+├── DTOs/                 # Company/, JobApplication/
 ├── Enums/                # ApplicationStatus
 ├── Services/             # Interfaces/, CompanyService, JobApplicationService
 ├── Middleware/           # ExceptionHandlingMiddleware
