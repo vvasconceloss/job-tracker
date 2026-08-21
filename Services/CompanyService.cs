@@ -1,10 +1,10 @@
 using JobTracker.Data;
+using JobTracker.Enums;
 using JobTracker.Models;
+using JobTracker.Common;
 using JobTracker.Interfaces;
 using JobTracker.DTOs.Company;
 using Microsoft.EntityFrameworkCore;
-using JobTracker.Common;
-using JobTracker.Enums;
 
 namespace JobTracker.Services
 {
