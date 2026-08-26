@@ -1,6 +1,9 @@
 using JobTracker.Data;
+using JobTracker.Enums;
 using JobTracker.Common;
 using JobTracker.Interfaces;
+using JobTracker.DTOs.Company;
+using Microsoft.EntityFrameworkCore;
 using JobTracker.DTOs.JobApplication;
 
 namespace JobTracker.Services
@@ -9,14 +12,49 @@ namespace JobTracker.Services
   {
     private readonly ApplicationDbContext _context = context;
 
-    public Task<IEnumerable<JobApplicationResponseDto>> GetAllAsync()
+    public async Task<IEnumerable<JobApplicationResponseDto>> GetAllAsync()
     {
-      throw new NotImplementedException();
+      return await _context.JobApplications
+        .Select(ja => new JobApplicationResponseDto(
+          ja.Id,
+          ja.Position,
+          ja.Status.ToString(),
+          ja.Location,
+          ja.SalaryMin,
+          ja.SalaryMax,
+          ja.JobUrl,
+          ja.AppliedAt,
+          ja.Notes,
+          ja.CreatedAt,
+          ja.UpdatedAt,
+          ja.Company != null 
+            ? new CompanyResponseDto(ja.Company.Id, ja.Company.Name, ja.Company.Website) 
+            : new CompanyResponseDto(0, "N/A", null) 
+        ))
+        .ToListAsync();
     }
 
-    public Task<Result<JobApplicationResponseDto>> GetByIdAsync(int id)
+    public async Task<Result<JobApplicationResponseDto>> GetByIdAsync(Guid id)
     {
-      throw new NotImplementedException();
+      var jobApplication = await _context.JobApplications.FindAsync(id);
+      if (jobApplication == null) return Result<JobApplicationResponseDto>.Failure(ErrorType.NotFound, $"The Job Application with ID {id} could not be found.");
+
+      return new JobApplicationResponseDto(
+        jobApplication.Id,
+        jobApplication.Position,
+        jobApplication.Status.ToString(),
+        jobApplication.Location,
+        jobApplication.SalaryMin,
+        jobApplication.SalaryMax,
+        jobApplication.JobUrl,
+        jobApplication.AppliedAt,
+        jobApplication.Notes,
+        jobApplication.CreatedAt,
+        jobApplication.UpdatedAt,
+        jobApplication.Company != null 
+          ? new CompanyResponseDto(jobApplication.Company.Id, jobApplication.Company.Name, jobApplication.Company.Website) 
+          : new CompanyResponseDto(0, "N/A", null) 
+      );
     }
 
     public Task<Result<JobApplicationResponseDto>> CreateAsync(CreateJobApplicationDto dto)
@@ -29,9 +67,15 @@ namespace JobTracker.Services
       throw new NotImplementedException();
     }
 
-    public Task<Result> DeleteAsync(Guid id)
+    public async Task<Result> DeleteAsync(Guid id)
     {
-      throw new NotImplementedException();
+      var jobApplication = await _context.JobApplications.FindAsync(id);
+      if (jobApplication == null) return Result.Failure(ErrorType.NotFound, $"The Job Application with ID {id} could not be found.");
+
+      _context.JobApplications.Remove(jobApplication);
+      await _context.SaveChangesAsync();
+      
+      return Result.Success();
     }
   }
 }
