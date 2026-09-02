@@ -51,16 +51,7 @@ namespace JobTracker.Controllers
     public async Task<IActionResult> Delete(Guid id)
     {
       var result = await _jobApplicationService.DeleteAsync(id);
-      if (result.IsFailure)
-      {
-        return result.Error!.Type switch
-        {
-          Enums.ErrorType.NotFound => NotFound(new { message = result.Error.Message }),
-          Enums.ErrorType.Validation => BadRequest(new { message = result.Error.Message }),
-          Enums.ErrorType.Conflict => Conflict(new { message = result.Error.Message }),
-          _ => BadRequest(new { message = result.Error.Message })
-        };
-      }
+      if (result.IsFailure) return HandleResult(result);
 
       return NoContent();
     }

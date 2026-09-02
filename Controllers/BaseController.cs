@@ -17,10 +17,26 @@ namespace JobTracker.Controllers
       
       return result.Error!.Type switch
       {
-        ErrorType.NotFound => NotFound(new { message = result.Error.Message }),
-        ErrorType.Conflict => Conflict(new { message = result.Error.Message }),
-        ErrorType.Validation => BadRequest(new { message = result.Error.Message }),
-        _ => BadRequest(new { message = result.Error.Message })
+        ErrorType.NotFound => NotFound(new { status = 404, message = result.Error.Message }),
+        ErrorType.Conflict => Conflict(new { status = 409, message = result.Error.Message }),
+        ErrorType.Validation => BadRequest(new { status = 400, message = result.Error.Message }),
+        _ => BadRequest(new { status = 400, message = result.Error.Message })
+      };
+    }
+
+    protected IActionResult HandleResult(Result result)
+    {
+      if (result.IsSuccess)
+      {
+        return NoContent();
+      }
+
+      return result.Error!.Type switch
+      {
+        ErrorType.NotFound => NotFound(new { status = 404, message = result.Error.Message }),
+        ErrorType.Conflict => Conflict(new { status = 409, message = result.Error.Message }),
+        ErrorType.Validation => BadRequest(new { status = 400, message = result.Error.Message }),
+        _ => BadRequest(new { status = 400, message = result.Error.Message })
       };
     }
   }
