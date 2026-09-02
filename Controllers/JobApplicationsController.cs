@@ -1,19 +1,20 @@
 using JobTracker.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using JobTracker.DTOs.JobApplication;
+using JobTracker.Enums;
 
 namespace JobTracker.Controllers
 {
   [ApiController]
-  [Route("api/[controller]")]
+  [Route("api/applications")]
   public class JobApplicationsController(IJobApplicationService jobApplicationService) : BaseController
   {
     private readonly IJobApplicationService _jobApplicationService = jobApplicationService;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] ApplicationStatus? status, [FromQuery] int? companyId, [FromQuery] DateTime? from, [FromQuery] DateTime? to)
     {
-      var jobApplications = await _jobApplicationService.GetAllAsync();
+      var jobApplications = await _jobApplicationService.GetAllAsync(status, companyId, from, to);
       return Ok(jobApplications);
     }
 

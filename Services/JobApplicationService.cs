@@ -13,9 +13,16 @@ namespace JobTracker.Services
   {
     private readonly ApplicationDbContext _context = context;
 
-    public async Task<IEnumerable<JobApplicationResponseDto>> GetAllAsync()
+    public async Task<IEnumerable<JobApplicationResponseDto>> GetAllAsync(ApplicationStatus? status, int? companyId, DateTime? from, DateTime? to)
     {
-      return await _context.JobApplications
+      var query = _context.JobApplications.AsNoTracking().AsQueryable();
+
+      if (status.HasValue) query = query.Where(ja => ja.Status == status.Value);
+      if (companyId.HasValue) query = query.Where(ja => ja.CompanyId == companyId.Value);
+      if (from.HasValue) query = query.Where(ja => ja.AppliedAt >= from.Value.Date);
+      if (to.HasValue) query = query.Where(ja => ja.AppliedAt < to.Value.Date.AddDays(1));
+
+      return await query
         .Select(ja => new JobApplicationResponseDto(
           ja.Id,
           ja.Position,
