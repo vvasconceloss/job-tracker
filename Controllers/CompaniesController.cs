@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JobTracker.Controllers
 {
   [ApiController]
-  [Route("api/[controller]")]
+  [Route("api/companies")]
   public class CompaniesController(ICompanyService companyService) : BaseController
   {
     private readonly ICompanyService _companyService = companyService;
