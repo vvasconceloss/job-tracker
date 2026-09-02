@@ -41,6 +41,12 @@ namespace JobTracker.Controllers
       return HandleResult(result);
     }
 
+    [HttpPatch("{id:guid}/status")]
+    public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateJobApplicationStatusDto dto) {
+      var result = await _jobApplicationService.UpdateStatusAsync(id, dto.Status);
+      return HandleResult(result);
+    }
+
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

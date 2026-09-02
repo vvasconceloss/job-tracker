@@ -186,6 +186,39 @@ namespace JobTracker.Services
       return Uri.TryCreate(url, UriKind.Absolute, out var uriResult)
         && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
     }
+    
+    public async Task<Result<JobApplicationResponseDto>> UpdateStatusAsync(Guid id, ApplicationStatus status) {
+      var jobApplication = await _context.JobApplications.FindAsync(id);
+      
+      if (jobApplication == null) return Result<JobApplicationResponseDto>.Failure(ErrorType.NotFound, $"The Job Application with ID {id} could not be found.");
+      if (jobApplication.Status is ApplicationStatus.Offer or ApplicationStatus.Rejected or ApplicationStatus.Withdrawn)
+        return Result<JobApplicationResponseDto>.Failure(ErrorType.Validation, $"Cannot transition from terminal status '{jobApplication.Status}' via PATCH. Use PUT for manual corrections.");
+      
+      jobApplication.Status = status;
+      jobApplication.UpdatedAt = DateTime.UtcNow;
+  
+      await _context.SaveChangesAsync();
+      await _context.Entry(jobApplication).Reference(x => x.Company).LoadAsync();
+
+      var company = jobApplication.Company;
+      
+      return new JobApplicationResponseDto(
+        jobApplication.Id,
+        jobApplication.Position,
+        jobApplication.Status.ToString(),
+        jobApplication.Location,
+        jobApplication.SalaryMin,
+        jobApplication.SalaryMax,
+        jobApplication.JobUrl,
+        jobApplication.AppliedAt,
+        jobApplication.Notes,
+        jobApplication.CreatedAt,
+        jobApplication.UpdatedAt,
+        company != null
+          ? new CompanyResponseDto(company.Id, company.Name, company.Website)
+          : new CompanyResponseDto(jobApplication.CompanyId, "N/A", null)
+      );
+    }
 
     public async Task<Result> DeleteAsync(Guid id)
     {

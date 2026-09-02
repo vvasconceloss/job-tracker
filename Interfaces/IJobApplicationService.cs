@@ -10,6 +10,7 @@ namespace JobTracker.Interfaces
     Task<Result<JobApplicationResponseDto>> GetByIdAsync(Guid id);
     Task<Result<JobApplicationResponseDto>> CreateAsync(CreateJobApplicationDto dto);
     Task<Result<JobApplicationResponseDto>> UpdateAsync(Guid id, UpdateJobApplicationDto dto);
+    Task<Result<JobApplicationResponseDto>> UpdateStatusAsync(Guid id, ApplicationStatus status);
     Task<Result> DeleteAsync(Guid id);
   }
 }
