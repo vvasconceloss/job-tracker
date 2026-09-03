@@ -1,6 +1,120 @@
 @JobTracker_HostAddress = http://localhost:5099
 
-GET {{JobTracker_HostAddress}}/api/
+### Health check
+GET {{JobTracker_HostAddress}}/api/companies
+Accept: application/json
+
+### 1. Create company
+POST {{JobTracker_HostAddress}}/api/companies
+Content-Type: application/json
+
+{
+  "name": "Integer Consulting",
+  "website": "https://www.integer.pt"
+}
+
+### 2. Create company (duplicate - expect 409)
+POST {{JobTracker_HostAddress}}/api/companies
+Content-Type: application/json
+
+{
+  "name": "Integer Consulting",
+  "website": "https://www.integer.pt"
+}
+
+### 3. List companies
+GET {{JobTracker_HostAddress}}/api/companies
+Accept: application/json
+
+### 4. Get company by id
+GET {{JobTracker_HostAddress}}/api/companies/1
+Accept: application/json
+
+### 5. Create job application
+POST {{JobTracker_HostAddress}}/api/applications
+Content-Type: application/json
+
+{
+  "companyId": 1,
+  "position": "Backend Developer (.NET)",
+  "status": 1,
+  "location": "Remote",
+  "salaryMin": 2500,
+  "salaryMax": 3800,
+  "jobUrl": "https://example.com/jobs/backend-dotnet-123",
+  "appliedAt": "2026-09-01T00:00:00Z",
+  "notes": "Applied via LinkedIn - referral from former colleague"
+}
+
+### 6. Create job application (invalid company - expect 404)
+POST {{JobTracker_HostAddress}}/api/applications
+Content-Type: application/json
+
+{
+  "companyId": 999,
+  "position": "Frontend Developer",
+  "status": 1,
+  "location": "Lisbon",
+  "appliedAt": "2026-09-01T00:00:00Z"
+}
+
+### 7. List applications (all)
+GET {{JobTracker_HostAddress}}/api/applications
+Accept: application/json
+
+### 8. List applications - filter by status
+GET {{JobTracker_HostAddress}}/api/applications?status=Interview
+Accept: application/json
+
+### 9. List applications - filter by company
+GET {{JobTracker_HostAddress}}/api/applications?companyId=1
+Accept: application/json
+
+### 10. List applications - filter by date range
+GET {{JobTracker_HostAddress}}/api/applications?from=2026-08-01&to=2026-08-31
+Accept: application/json
+
+### 11. Get application by id
+GET {{JobTracker_HostAddress}}/api/applications/{{applicationId}}
+Accept: application/json
+
+### 12. Update application (PUT - full update)
+PUT {{JobTracker_HostAddress}}/api/applications/{{applicationId}}
+Content-Type: application/json
+
+{
+  "position": "Senior Backend Developer (.NET)",
+  "status": 2,
+  "location": "Hybrid - Lisbon",
+  "salaryMin": 2800,
+  "salaryMax": 4200,
+  "jobUrl": "https://example.com/jobs/backend-dotnet-123",
+  "appliedAt": "2026-09-01T00:00:00Z",
+  "notes": "Updated after recruiter call"
+}
+
+### 13. Change status (PATCH - transition validation)
+PATCH {{JobTracker_HostAddress}}/api/applications/{{applicationId}}/status
+Content-Type: application/json
+
+{
+  "status": 3
+}
+
+### 14. Change status from terminal (expect 400)
+PATCH {{JobTracker_HostAddress}}/api/applications/{{applicationId}}/status
+Content-Type: application/json
+
+{
+  "status": 4
+}
+
+### 15. Delete application
+DELETE {{JobTracker_HostAddress}}/api/applications/{{applicationId}}
+Accept: application/json
+
+### 16. Dashboard
+GET {{JobTracker_HostAddress}}/api/dashboard
 Accept: application/json
 
 ###
