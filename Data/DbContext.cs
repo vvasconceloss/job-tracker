@@ -6,8 +6,8 @@ namespace JobTracker.Data
 {
   public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
   {
-    public required DbSet<Company> Companies { get; set; }
-    public required DbSet<JobApplication> JobApplications { get; set; }
+    public DbSet<Company> Companies { get; set; } = null!;
+    public DbSet<JobApplication> JobApplications { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
