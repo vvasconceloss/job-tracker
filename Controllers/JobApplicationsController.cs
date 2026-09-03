@@ -12,6 +12,7 @@ namespace JobTracker.Controllers
     private readonly IJobApplicationService _jobApplicationService = jobApplicationService;
 
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<JobApplicationResponseDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] ApplicationStatus? status, [FromQuery] int? companyId, [FromQuery] DateTime? from, [FromQuery] DateTime? to)
     {
       var jobApplications = await _jobApplicationService.GetAllAsync(status, companyId, from, to);
@@ -19,6 +20,8 @@ namespace JobTracker.Controllers
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(JobApplicationResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid id)
     {
       var result = await _jobApplicationService.GetByIdAsync(id);
@@ -26,6 +29,9 @@ namespace JobTracker.Controllers
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(JobApplicationResponseDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Create([FromBody] CreateJobApplicationDto dto)
     {
       var result = await _jobApplicationService.CreateAsync(dto);
@@ -35,6 +41,9 @@ namespace JobTracker.Controllers
     }
 
     [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(JobApplicationResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateJobApplicationDto dto)
     {
       var result = await _jobApplicationService.UpdateAsync(id, dto);
@@ -42,12 +51,17 @@ namespace JobTracker.Controllers
     }
 
     [HttpPatch("{id:guid}/status")]
+    [ProducesResponseType(typeof(JobApplicationResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateJobApplicationStatusDto dto) {
       var result = await _jobApplicationService.UpdateStatusAsync(id, dto.Status);
       return HandleResult(result);
     }
 
     [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id)
     {
       var result = await _jobApplicationService.DeleteAsync(id);

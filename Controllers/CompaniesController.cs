@@ -10,7 +10,8 @@ namespace JobTracker.Controllers
   {
     private readonly ICompanyService _companyService = companyService;
 
-    [HttpGet]
+      [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<CompanyResponseDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
       var companies = await _companyService.GetAllAsync();
@@ -18,6 +19,8 @@ namespace JobTracker.Controllers
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(CompanyResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(int id)
     {
       var result = await _companyService.GetByIdAsync(id);
@@ -25,6 +28,9 @@ namespace JobTracker.Controllers
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(CompanyResponseDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Create([FromBody] CreateCompanyDto dto)
     {
       var result = await _companyService.CreateAsync(dto);
