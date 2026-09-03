@@ -127,7 +127,6 @@ Don't test trivial CRUD or controllers — the return on that time is low.
 - [x] README with: description, stack, how to run locally, Scalar screenshots (placeholder in `README.md` + `JobTracker.http`)
 - [x] Review status codes across all endpoints (added `ProducesResponseType` attributes, verified 201/200/204/400/404/409)
 - [x] Review naming (en-US consistency in code, as that's the industry standard)
-- [ ] Populate the database with my actual current job applications (skipped per request — manual via Scalar/`JobTracker.http`)
 
 ## 3. MVP Definition of Done
 

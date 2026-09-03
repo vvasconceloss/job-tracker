@@ -27,12 +27,6 @@ It's built as a learning-first portfolio piece, backend-only (Scalar as the inte
 
 ---
 
-## Project Status
-
-✅ MVP complete (Phases 0–6 in `docs/PLANNING.md`). No live deployment: this project is intentionally backend-only with Scalar as the interface, and hosting is out of scope for now.
-
----
-
 ## Domain Model
 
 ```
@@ -129,9 +123,9 @@ Base path: `/api`
 
 ### Dashboard
 
-| Method | Route           | Description                                  | Success |
-| ------ | --------------- | -------------------------------------------- | ------- |
-| GET    | `/dashboard`    | Totals, rates and aggregations by status/company | 200     |
+| Method | Route        | Description                                      | Success |
+| ------ | ------------ | ------------------------------------------------ | ------- |
+| GET    | `/dashboard` | Totals, rates and aggregations by status/company | 200     |
 
 Example `GET /api/dashboard` response:
 
@@ -232,46 +226,6 @@ dotnet run
 ```
 
 The API will be available at `http://localhost:5099` (and `https://localhost:7115` via `launchSettings.json`), with Scalar UI at `/scalar/v1` in Development.
-
-### Populate with real data
-
-Use Scalar (`/scalar/v1`) to run the flow from `docs/MVP.md §2`:
-
-```
-Create company → Create application → Query → Filter → Change status → Update → Delete → View dashboard
-```
-
-Example requests are in `JobTracker.http` (VS Code / Rider HTTP client). For bulk seed, create companies and applications via `POST /api/companies` and `POST /api/applications` — see `docs/MVP.md §4` for the full contract.
-
----
-
-## Testing
-
-```bash
-dotnet test JobTracker.Tests/JobTracker.Tests.csproj
-# or
-dotnet test
-```
-
-Unit tests cover the Service layer, where the actual business rules live — not trivial CRUD or controllers:
-
-- `Should_Create_Application`
-- `Should_Reject_Unknown_Company`
-- `Should_Reject_Negative_Or_Inverted_Salary`
-- `Should_Reject_Invalid_Status_Transition` (terminal states: Offer/Rejected/Withdrawn)
-- `Should_Calculate_Interview_Rate` (incl. empty DB and rounding edge cases)
-
-7 tests, 0 failures.
-
----
-
-## Screenshots
-
-> Scalar UI — add screenshots to `docs/images/` and reference them here for the portfolio.
-
-- `docs/images/scalar-dashboard.png` — `GET /api/dashboard` response
-- `docs/images/scalar-create-application.png` — `POST /api/applications`
-- `docs/images/scalar-filter.png` — `GET /api/applications?status=Interview`
 
 ---
 
