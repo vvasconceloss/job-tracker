@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JobTracker.csproj" />
+    <ProjectReference Include="..\..\src\JobTracker.csproj" />
   </ItemGroup>
 
 </Project>
