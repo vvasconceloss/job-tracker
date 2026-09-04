@@ -66,24 +66,30 @@ PostgreSQL
 ```
 JobTracker/
 │
-├── Controllers/          # CompaniesController, JobApplicationsController, DashboardController, BaseController
-├── Data/                 # ApplicationDbContext, Configurations/
-├── DTOs/                 # Company/, JobApplication/, Dashboard/
-├── Enums/                # ApplicationStatus, ErrorType
-├── Interfaces/           # ICompanyService, IJobApplicationService, IDashboardService
-├── Services/             # CompanyService, JobApplicationService, DashboardService
-├── Middlewares/          # ExceptionHandlingMiddleware
-├── Common/               # Result, Error
-├── Migrations/           # EF Core migrations
+├── src/                  # Back-end .NET (JobTracker.csproj)
+│   ├── Controllers/      # CompaniesController, JobApplicationsController, DashboardController, BaseController
+│   ├── Data/             # ApplicationDbContext, Configurations/
+│   ├── DTOs/             # Company/, JobApplication/, Dashboard/
+│   ├── Enums/            # ApplicationStatus, ErrorType
+│   ├── Interfaces/       # ICompanyService, IJobApplicationService, IDashboardService
+│   ├── Services/         # CompanyService, JobApplicationService, DashboardService
+│   ├── Middlewares/      # ExceptionHandlingMiddleware
+│   ├── Common/           # Result, Error
+│   ├── Models/           # Company, JobApplication
+│   ├── Migrations/       # EF Core migrations
+│   ├── Properties/       # launchSettings.json
+│   ├── Program.cs
+│   ├── appsettings.json
+│   └── JobTracker.http
 │
-├── JobTracker.Tests/     # xUnit — Service-layer business rules (InMemory)
+├── tests/JobTracker.Tests/ # xUnit — Service-layer business rules (InMemory)
 │   ├── Helpers/          # TestDbContextFactory
 │   └── Services/         # JobApplicationServiceTests, DashboardServiceTests
 │
-├── Program.cs
-├── appsettings.json
+├── docs/                 # MVP.md, PLANNING.md
+├── JobTracker.slnx
 ├── docker-compose.yml
-└── JobTracker.http
+└── frontend/             # Front-end (planned, React + Vite + TS)
 ```
 
 No Repository Pattern, no Clean Architecture, no CQRS/MediatR. EF Core already abstracts data access, and this project's size doesn't justify the extra layers.
@@ -189,11 +195,11 @@ Start PostgreSQL (Docker):
 docker compose up -d
 ```
 
-Restore and build:
+Restore and build (solution at repo root):
 
 ```bash
-dotnet restore
-dotnet build
+dotnet restore JobTracker.slnx
+dotnet build JobTracker.slnx
 ```
 
 Configure local secrets (outside version control):
@@ -203,7 +209,7 @@ dotnet user-secrets set "ConnectionStrings:DefaultConnection" \
   "Host=localhost;Port=5433;Database=jobtracker;Username=jobtracker_admin;Password=your_secure_password"
 ```
 
-Or set via `appsettings.Development.json` (kept out of git):
+Or set via `src/appsettings.Development.json` (kept out of git):
 
 ```json
 {
@@ -213,16 +219,16 @@ Or set via `appsettings.Development.json` (kept out of git):
 }
 ```
 
-Apply migrations:
+Apply migrations (back-end project lives in `src/`):
 
 ```bash
-dotnet ef database update
+dotnet ef database update --project src/JobTracker.csproj
 ```
 
 Run the app:
 
 ```bash
-dotnet run
+dotnet run --project src/JobTracker.csproj
 ```
 
 The API will be available at `http://localhost:5099` (and `https://localhost:7115` via `launchSettings.json`), with Scalar UI at `/scalar/v1` in Development.

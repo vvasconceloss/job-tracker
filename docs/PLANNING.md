@@ -7,53 +7,72 @@ Companion to `MVP.md`. This document covers **architecture, technical decisions,
 ```
 JobTracker/
 │
-├── Controllers/
-│   ├── CompaniesController.cs
-│   ├── JobApplicationsController.cs
-│   ├── DashboardController.cs
-│   └── BaseController.cs
+├── src/                    # Back-end .NET (JobTracker.csproj)
+│   ├── Controllers/
+│   │   ├── CompaniesController.cs
+│   │   ├── JobApplicationsController.cs
+│   │   ├── DashboardController.cs
+│   │   └── BaseController.cs
+│   │
+│   ├── Data/
+│   │   ├── ApplicationDbContext.cs
+│   │   └── Configurations/
+│   │       ├── CompanyConfiguration.cs
+│   │       └── JobApplicationConfiguration.cs
+│   │
+│   ├── DTOs/
+│   │   ├── Company/
+│   │   ├── JobApplication/
+│   │   └── Dashboard/
+│   │
+│   ├── Enums/
+│   │   ├── ApplicationStatus.cs
+│   │   └── ErrorType.cs
+│   │
+│   ├── Interfaces/
+│   │   ├── ICompanyService.cs
+│   │   ├── IJobApplicationService.cs
+│   │   └── IDashboardService.cs
+│   │
+│   ├── Services/
+│   │   ├── CompanyService.cs
+│   │   ├── JobApplicationService.cs
+│   │   └── DashboardService.cs
+│   │
+│   ├── Middlewares/
+│   │   └── ExceptionHandlingMiddleware.cs
+│   │
+│   ├── Common/
+│   │   ├── Result.cs
+│   │   └── Error.cs
+│   │
+│   ├── Models/
+│   │   ├── Company.cs
+│   │   └── JobApplication.cs
+│   │
+│   ├── Migrations/
+│   │
+│   ├── Properties/
+│   │   └── launchSettings.json
+│   │
+│   ├── Program.cs
+│   ├── appsettings.json
+│   ├── appsettings.Development.json
+│   └── JobTracker.http
 │
-├── Data/
-│   ├── ApplicationDbContext.cs
-│   └── Configurations/
-│       ├── CompanyConfiguration.cs
-│       └── JobApplicationConfiguration.cs
-│
-├── DTOs/
-│   ├── Company/
-│   ├── JobApplication/
-│   └── Dashboard/
-│
-├── Enums/
-│   ├── ApplicationStatus.cs
-│   └── ErrorType.cs
-│
-├── Interfaces/
-│   ├── ICompanyService.cs
-│   ├── IJobApplicationService.cs
-│   └── IDashboardService.cs
-│
-├── Services/
-│   ├── CompanyService.cs
-│   ├── JobApplicationService.cs
-│   └── DashboardService.cs
-│
-├── Middlewares/
-│   └── ExceptionHandlingMiddleware.cs
-│
-├── Common/
-│   ├── Result.cs
-│   └── Error.cs
-│
-├── Models/
-│   ├── Company.cs
-│   └── JobApplication.cs
-│
-├── JobTracker.Tests/
+├── tests/JobTracker.Tests/
 │   ├── Helpers/TestDbContextFactory.cs
 │   └── Services/
 │
-└── Program.cs
+├── docs/
+│   ├── MVP.md
+│   └── PLANNING.md
+│
+├── frontend/               # Front-end (planned, React + Vite + TS)
+│
+├── JobTracker.slnx
+├── docker-compose.yml
+└── README.md
 ```
 
 Dependency flow:
@@ -71,8 +90,8 @@ Each phase should compile and run before moving to the next. Don't move to the n
 - [x] `dotnet new webapi` (or minimal API + controllers, per preference)
 - [x] Set up local PostgreSQL (Docker or native install)
 - [x] Install `Npgsql.EntityFrameworkCore.PostgreSQL`
-- [x] Configure `ApplicationDbContext` and connection string in `appsettings.json` (+ `appsettings.Development.json` kept out of git)
-- [x] First `dotnet ef migrations add InitialCreate` + `dotnet ef database update`
+- [x] Configure `ApplicationDbContext` and connection string in `src/appsettings.json` (+ `src/appsettings.Development.json` kept out of git)
+- [x] First `dotnet ef migrations add InitialCreate --project src/JobTracker.csproj` + `dotnet ef database update --project src/JobTracker.csproj`
 
 ### Phase 1 — Company (complete vertical slice)
 
@@ -124,7 +143,7 @@ Don't test trivial CRUD or controllers — the return on that time is low.
 
 ### Phase 6 — Final polish
 
-- [x] README with: description, stack, how to run locally, Scalar screenshots (placeholder in `README.md` + `JobTracker.http`)
+- [x] README with: description, stack, how to run locally, Scalar screenshots (placeholder in `README.md` + `src/JobTracker.http`)
 - [x] Review status codes across all endpoints (added `ProducesResponseType` attributes, verified 201/200/204/400/404/409)
 - [x] Review naming (en-US consistency in code, as that's the industry standard)
 
@@ -132,7 +151,7 @@ Don't test trivial CRUD or controllers — the return on that time is low.
 
 The project is ready for a portfolio when:
 
-1. The full flow in `MVP.md` §2 runs without error via Scalar.
+1. The full flow in `MVP.md` 2 runs without error via Scalar.
 2. The 5 tests from Phase 5 pass.
 3. There's a README clear enough for someone to run the project from scratch.
 4. I can explain, without notes, the full path of a `PATCH /applications/{id}/status` — from the HTTP request to the response.
