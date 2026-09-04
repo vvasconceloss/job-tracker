@@ -11,8 +11,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseNpgsql(connectionString);
+  options.UseNpgsql(connectionString);
 });
+
+builder.Services.AddCors(o => o.AddPolicy("FrontendDev",
+  p => p.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod()));
 
 builder.Services.AddControllers()
   .ConfigureApiBehaviorOptions(options =>
@@ -47,6 +50,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
+app.UseCors("FrontendDev");
 
 app.MapControllers();
 
