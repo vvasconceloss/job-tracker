@@ -2,7 +2,6 @@ using JobTracker.Enums;
 using JobTracker.Models;
 using JobTracker.Services;
 using JobTracker.Tests.Helpers;
-using Microsoft.EntityFrameworkCore;
 
 namespace JobTracker.Tests.Services;
 
